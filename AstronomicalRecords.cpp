@@ -18,14 +18,6 @@ private:
   uint8_t f(const vector<int>& A, const vector<int>& B, int i, int j) {
     auto aSize = A.size();
     auto bSize = B.size();
-    vector<long> AL;
-    for (auto a : A) {
-      AL.push_back(static_cast<long>(a) * B[j]);
-    }
-    vector<long> BL;
-    for (auto b : B) {
-      BL.push_back(static_cast<long>(b) * A[i]);
-    }
     vector<vector<uint8_t>> N(aSize + 1, vector<uint8_t>(bSize + 1));
     vector<vector<uint8_t>> M(aSize + 1, vector<uint8_t>(bSize + 1));
     for (int a = 0; a <= aSize; ++a) {
@@ -36,17 +28,15 @@ private:
     }
     for (int a = 1; a <= aSize; ++a) {
       for (int b = 1; b <= bSize; ++b) {
-        if (AL[a - 1] == BL[b - 1]) {
+        if (static_cast<long>(A[a - 1]) * B[j] == static_cast<long>(B[b - 1]) * A[i]) {
           N[a][b] = N[a - 1][b - 1] + 1;
           M[a][b] = M[a - 1][b - 1];
+        } else if (M[a - 1][b] < M[a][b - 1]) {
+          N[a][b] = N[a - 1][b];
+          M[a][b] = M[a - 1][b] + 1;
         } else {
-          if (M[a - 1][b] < M[a][b - 1]) {
-            N[a][b] = N[a - 1][b];
-            M[a][b] = M[a - 1][b] + 1;
-          } else {
-            N[a][b] = N[a][b - 1];
-            M[a][b] = M[a][b - 1] + 1;
-          }
+          N[a][b] = N[a][b - 1];
+          M[a][b] = M[a][b - 1] + 1;
         }
       }
     }
@@ -136,13 +126,13 @@ int main(int argc, char* argv[])
 				_expected = 37;
 				_received = _obj.minimalPlanets(vector <int>(A, A+sizeof(A)/sizeof(int)), vector <int>(B, B+sizeof(B)/sizeof(int))); break;
 			}
-			/*case 6:
+			case 6:
 			{
-				int A[] = ;
-				int B[] = ;
-				_expected = ;
+				int A[] = {705032704, 1000000000};
+				int B[] = {10, 2};
+				_expected = 3;
 				_received = _obj.minimalPlanets(vector <int>(A, A+sizeof(A)/sizeof(int)), vector <int>(B, B+sizeof(B)/sizeof(int))); break;
-			}*/
+			}
 			/*case 7:
 			{
 				int A[] = ;
